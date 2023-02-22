@@ -1,0 +1,85 @@
+name: Docker
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+
+env:
+  BRANCH: ${{ github.ref_name }}
+  SERVER_NAME: adam-server
+  PROPERTIES_PATH: src/main/resources
+  PROPERTIES_EXTENSION: properties
+
+jobs:
+  Setup:
+    name: Setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+  Dev:
+    name: Push Dev
+
+    if: ${{ env.BRANCH == 'dev' }}
+
+    needs: [Setup]
+    runs-on: ubuntu-latest
+
+    env:
+      STAGE: dev
+
+    steps:
+      - name: Create *.${{ env.STAGE }}.properties
+        run: |
+          echo "${{ secrets.DATABASE_DEV_PROPERTIES }}" > ${{ env.PROPERTIES_PATH }}/database.${{ env.STAGE }}.${{ env.PROPERTIES_EXTENSION }}
+          echo "${{ secrets.JPA_DEV_PROPERTIES }}" > ${{ env.PROPERTIES_PATH }}/jpa.${{ env.STAGE }}.${{ env.PROPERTIES_EXTENSION }}
+          echo "${{ secrets.SECURITY_DEV_PROPERTIES }}" > ${{ env.PROPERTIES_PATH }}/security.${{ env.STAGE }}.${{ env.PROPERTIES_EXTENSION }}
+
+      - name: Build and Push
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.SERVER_NAME }}:${{ env.STAGE }}
+
+  Prod:
+    name: Push Prod
+
+    if: ${{ env.BRANCH == 'main' }}
+
+    needs: [ Setup ]
+    runs-on: ubuntu-latest
+
+    env:
+      STAGE: prod
+
+    steps:
+      - name: Create *.${{ env.STAGE }}.properties
+        run: |
+          echo "${{ secrets.DATABASE_PROD_PROPERTIES }}" > ${{ env.PROPERTIES_PATH }}/database.${{ env.STAGE }}.${{ env.PROPERTIES_EXTENSION }}
+          echo "${{ secrets.JPA_PROD_PROPERTIES }}" > ${{ env.PROPERTIES_PATH }}/jpa.${{ env.STAGE }}.${{ env.PROPERTIES_EXTENSION }}
+          echo "${{ secrets.SECURITY_PROD_PROPERTIES }}" > ${{ env.PROPERTIES_PATH }}/security.${{ env.STAGE }}.${{ env.PROPERTIES_EXTENSION }}
+
+      - name: Build and Push
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.SERVER_NAME }}:${{ env.STAGE }}
