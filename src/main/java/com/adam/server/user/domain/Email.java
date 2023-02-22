@@ -3,17 +3,26 @@ package com.adam.server.user.domain;
 import static com.google.common.base.Preconditions.checkArgument;
 import static io.micrometer.common.util.StringUtils.isNotEmpty;
 
+import jakarta.persistence.Access;
+import jakarta.persistence.AccessType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+@Embeddable
+@Access(AccessType.FIELD)
 public class Email {
 
-  private final String address;
+  @Column(name = "email", length = 50, unique = true, nullable = false)
+  private String address;
 
   private static final Pattern addressPattern =
       Pattern.compile("[\\w~\\-.+]+@[\\w~\\-]+(\\.[\\w~\\-]+)+");
+
+  protected Email() {}
 
   public Email(String address) {
     checkArgument(isNotEmpty(address), "address must be provided");
