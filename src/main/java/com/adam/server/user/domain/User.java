@@ -1,5 +1,7 @@
 package com.adam.server.user.domain;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -42,22 +44,17 @@ public class User {
   protected User() {}
 
   public User(Email email, String password, Name name, SessionTime sessionTime) {
-    this(email, password, name, new Notification(), sessionTime, Role.USER);
-  }
+    checkArgument(email != null, "email must be provided.");
+    checkArgument(password != null, "password must be provided.");
+    checkArgument(name != null, "name must be provided.");
+    checkArgument(sessionTime != null, "session time must be provided");
 
-  private User(
-      Email email,
-      String password,
-      Name name,
-      Notification notification,
-      SessionTime sessionTime,
-      Role role) {
     this.email = email;
     this.password = password;
     this.name = name;
-    this.notification = notification;
+    this.notification = new Notification();
     this.sessionTime = sessionTime;
-    this.role = role;
+    this.role = Role.USER;
   }
 
   @Override
