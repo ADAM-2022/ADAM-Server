@@ -10,6 +10,10 @@ on:
       - main
       - dev
 
+env:
+  PROPERTIES_PATH: src/main/resources
+  PROPERTIES_EXTENSION: properties
+
 jobs:
   build:
     name: Build
@@ -23,6 +27,11 @@ jobs:
           distribution: 'oracle'
           java-version: '19'
           cache: 'gradle'
+
+      - name: Create *.dev.properties
+        run: |
+          echo "${{ secrets.JPA_DEV_PROPERTIES }}" > ${{ env.PROPERTIES_PATH }}/jpa.dev.${{ env.PROPERTIES_EXTENSION }}
+          echo "${{ secrets.SECURITY_DEV_PROPERTIES }}" > ${{ env.PROPERTIES_PATH }}/security.dev.${{ env.PROPERTIES_EXTENSION }}
 
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2
