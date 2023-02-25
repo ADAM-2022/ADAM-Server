@@ -2,18 +2,22 @@ package com.adam.server.user.domain;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+import com.adam.server.auth.domain.Auth;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Getter
 @Entity
@@ -25,12 +29,14 @@ public class User {
 
   @Embedded private Email email;
 
-  @Column(nullable = false)
-  private String password;
+  @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+  @JoinColumn(name = "auth_id")
+  private Auth auth;
 
   @Embedded private Name name;
 
-  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+  @JoinColumn(name = "notification_id")
   private Notification notification;
 
   @Enumerated(EnumType.STRING)
@@ -50,7 +56,7 @@ public class User {
     checkArgument(sessionTime != null, "session time must be provided");
 
     this.email = email;
-    this.password = password;
+    this.auth = new Auth(password);
     this.name = name;
     this.notification = new Notification();
     this.sessionTime = sessionTime;
@@ -68,5 +74,11 @@ public class User {
         .append("sessionTime", sessionTime)
         .append("role", role)
         .toString();
+  }
+
+  public void validatePassword(PasswordEncoder passwordEncoder, String password) {
+    if (!passwordEncoder.matches(password, auth.getPassword())) {
+      throw new IllegalArgumentException("Bad password");
+    }
   }
 }

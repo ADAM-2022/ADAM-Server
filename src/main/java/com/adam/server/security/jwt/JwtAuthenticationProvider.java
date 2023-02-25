@@ -47,7 +47,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         new JwtAuthenticationToken(jwtAuthentication, null, authorityList);
 
     String accessToken = authService.accessToken(id, role);
-    String refreshToken = authService.refreshToken(id);
+    String refreshToken = authService.refreshToken(user);
     authenticated.setDetails(new LoginResponseDto(accessToken, refreshToken));
     return authenticated;
   }
