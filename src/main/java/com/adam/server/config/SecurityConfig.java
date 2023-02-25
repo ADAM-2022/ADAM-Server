@@ -45,6 +45,8 @@ public class SecurityConfig {
         .permitAll()
         .requestMatchers("/api/user/exists")
         .permitAll()
+        .requestMatchers("/api/auth/{refreshToken}/reissue")
+        .permitAll()
         .requestMatchers("/api/**")
         .hasRole(Role.USER.name())
         .anyRequest()

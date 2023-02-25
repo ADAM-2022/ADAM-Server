@@ -1,9 +1,9 @@
 package com.adam.server.user.domain;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -11,9 +11,8 @@ import org.hibernate.annotations.ColumnDefault;
 public class Notification {
 
   @Id
-  @OneToOne
-  @JoinColumn(name = "user_id")
-  private User user;
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
   @ColumnDefault(value = "false")
   private boolean allowPost;
@@ -29,7 +28,6 @@ public class Notification {
   @Override
   public String toString() {
     return new ToStringBuilder(this)
-        .append("user", user)
         .append("allowPost", allowPost)
         .append("allowComment", allowComment)
         .toString();
