@@ -2,6 +2,7 @@ package com.adam.server.user.domain;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+import com.adam.server.auth.domain.Auth;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -25,8 +26,8 @@ public class User {
 
   @Embedded private Email email;
 
-  @Column(nullable = false)
-  private String password;
+  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  private Auth auth;
 
   @Embedded private Name name;
 
@@ -50,7 +51,7 @@ public class User {
     checkArgument(sessionTime != null, "session time must be provided");
 
     this.email = email;
-    this.password = password;
+    this.auth = new Auth(password);
     this.name = name;
     this.notification = new Notification();
     this.sessionTime = sessionTime;
