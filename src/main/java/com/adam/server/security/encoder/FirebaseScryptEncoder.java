@@ -68,8 +68,12 @@ public class FirebaseScryptEncoder implements PasswordEncoder {
   }
 
   private byte[] encrypt(byte[] signerKeyBytes, byte[] hashedRawPasswordBytes)
-      throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException,
-          InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+      throws NoSuchPaddingException,
+          NoSuchAlgorithmException,
+          InvalidAlgorithmParameterException,
+          InvalidKeyException,
+          IllegalBlockSizeException,
+          BadPaddingException {
     Cipher c = Cipher.getInstance(CIPHER);
     Key key = generateKeyFromString(hashedRawPasswordBytes);
     IvParameterSpec ivParameterSpec = new IvParameterSpec(new byte[16]);
