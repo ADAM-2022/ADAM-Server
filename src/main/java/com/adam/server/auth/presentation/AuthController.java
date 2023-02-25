@@ -1,6 +1,7 @@
 package com.adam.server.auth.presentation;
 
 import com.adam.server.auth.application.AuthService;
+import com.adam.server.auth.presentation.dto.JoinRequestDto;
 import com.adam.server.auth.presentation.dto.LoginRequestDto;
 import com.adam.server.auth.presentation.dto.LoginResponseDto;
 import com.adam.server.security.jwt.JwtAuthenticationToken;
@@ -29,6 +30,12 @@ public class AuthController {
   public ResponseEntity<String> reissue(@PathVariable String refreshToken) {
     String accessToken = authService.reissueAccessToken(refreshToken);
     return ResponseEntity.ok(accessToken);
+  }
+
+  @PostMapping("/join")
+  public ResponseEntity<Void> join(@RequestBody JoinRequestDto dto) {
+    authService.join(dto);
+    return ResponseEntity.ok(null);
   }
 
   @PostMapping("/login")

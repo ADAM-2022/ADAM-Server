@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import com.adam.server.auth.domain.RefreshToken;
 import com.adam.server.auth.domain.repository.RefreshTokenRepository;
+import com.adam.server.auth.presentation.dto.JoinRequestDto;
 import com.adam.server.auth.presentation.dto.LoginRequestDto;
 import com.adam.server.common.error.NotFoundException;
 import com.adam.server.common.model.Id;
@@ -73,5 +74,12 @@ public class AuthService {
     Id<User, Long> id = Id.of(User.class, user.getId());
     Role role = user.getRole();
     return accessToken(id, role);
+  }
+
+  @Transactional
+  public void join(JoinRequestDto dto) {
+    String password = passwordEncoder.encode(dto.getPassword());
+    User user = new User(dto.getEmail(), password, dto.getName(), dto.getSessionTime());
+    userRepository.save(user);
   }
 }
