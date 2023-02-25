@@ -10,12 +10,22 @@ on:
       - main
       - dev
 
+permissions:
+  contents: write
+
 jobs:
   formatting:
     name: Formatting
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - if: github.event_name != 'pull_request'
+        uses: actions/checkout@v3
+
+      - if: github.event_name == 'pull_request'
+        uses: actions/checkout@v3
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
 
       - name: Setup JDK 19
         uses: actions/setup-java@v3
@@ -26,8 +36,6 @@ jobs:
 
       - uses: axel-op/googlejavaformat-action@v3
         with:
-          args: "--replace"
-          skip-commit: true
-
-      - name: Print diffs
-        run: git --no-pager diff --exit-code
+          args: "--skip-sorting-imports --replace"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "refactor(projects): apply google java format"
