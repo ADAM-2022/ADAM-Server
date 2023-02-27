@@ -54,7 +54,7 @@ public class JwtAuthenticationTokenFilter extends GenericFilterBean {
 
         if (nonNull(id) && nonNull(role)) {
           JwtAuthentication jwtAuthentication = new JwtAuthentication(id, role);
-          List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(role.name());
+          List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(role.getRole());
 
           JwtAuthenticationToken jwtAuthenticationToken =
               new JwtAuthenticationToken(jwtAuthentication, null, authorities);

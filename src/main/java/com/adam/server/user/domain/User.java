@@ -81,4 +81,14 @@ public class User {
       throw new IllegalArgumentException("Bad password");
     }
   }
+
+  public void update(Name name, SessionTime sessionTime) {
+    if (name != null) {
+      this.name = name;
+    }
+
+    if (sessionTime != null) {
+      this.sessionTime = sessionTime;
+    }
+  }
 }

@@ -35,7 +35,7 @@ public final class Jwt {
         .withIssuedAt(issuedAt)
         .withExpiresAt(expiresAt)
         .withClaim("id", claims.id.value())
-        .withClaim("role", claims.role.name())
+        .withClaim("role", claims.role.getRole())
         .sign(algorithm);
   }
 
@@ -59,7 +59,7 @@ public final class Jwt {
       this.id = Id.of(User.class, id.asLong());
 
       Claim role = decodedJWT.getClaim("role");
-      this.role = Role.valueOf(role.asString());
+      this.role = Role.valueOf(role.asString().replace("ROLE_", ""));
 
       this.iat = decodedJWT.getIssuedAt();
       this.exp = decodedJWT.getExpiresAt();

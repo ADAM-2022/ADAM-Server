@@ -31,30 +31,30 @@ public class SecurityConfig {
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http.csrf()
-        .disable()
-        .headers()
-        .disable()
-        .sessionManagement()
-        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        .and()
-        .authorizeHttpRequests()
+    http.csrf().disable();
+
+    http.headers().disable();
+
+    http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+    http.authorizeHttpRequests()
         .requestMatchers("/api/auth/login")
         .permitAll()
         .requestMatchers("/api/auth/join")
         .permitAll()
-        .requestMatchers("/api/user/exists")
+        .requestMatchers("/api/users/exists")
         .permitAll()
         .requestMatchers("/api/auth/{refreshToken}/reissue")
         .permitAll()
         .requestMatchers("/api/**")
         .hasRole(Role.USER.name())
         .anyRequest()
-        .permitAll()
-        .and()
-        .formLogin()
-        .disable()
-        .addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
+        .permitAll();
+
+    http.formLogin().disable();
+
+    http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
+
     return http.build();
   }
 }
