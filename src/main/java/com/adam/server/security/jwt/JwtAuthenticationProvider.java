@@ -41,7 +41,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
     Role role = user.getRole();
 
     JwtAuthentication jwtAuthentication = new JwtAuthentication(id, role);
-    List<GrantedAuthority> authorityList = AuthorityUtils.createAuthorityList(role.name());
+    List<GrantedAuthority> authorityList = AuthorityUtils.createAuthorityList(role.getRole());
 
     JwtAuthenticationToken authenticated =
         new JwtAuthenticationToken(jwtAuthentication, null, authorityList);
