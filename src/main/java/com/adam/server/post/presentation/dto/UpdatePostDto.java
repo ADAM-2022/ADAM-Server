@@ -1,6 +1,6 @@
 package com.adam.server.post.presentation.dto;
 
-public class UpdateRequestDto {
+public class UpdatePostDto {
   private String title;
 
   private String body;

@@ -6,9 +6,9 @@ import com.adam.server.post.domain.Category;
 import com.adam.server.post.domain.Post;
 import com.adam.server.post.domain.repository.CategoryRepository;
 import com.adam.server.post.domain.repository.PostRepository;
-import com.adam.server.post.presentation.dto.CreateRequestDto;
+import com.adam.server.post.presentation.dto.CreatePostDto;
 import com.adam.server.post.presentation.dto.PostResponse;
-import com.adam.server.post.presentation.dto.UpdateRequestDto;
+import com.adam.server.post.presentation.dto.UpdatePostDto;
 import com.adam.server.user.domain.User;
 import com.adam.server.user.domain.repository.UserRepository;
 import java.util.List;
@@ -26,7 +26,7 @@ public class PostService {
   private final CategoryRepository categoryRepository;
 
   @Transactional
-  public void create(Id<User, Long> id, CreateRequestDto dto) {
+  public void create(Id<User, Long> id, CreatePostDto dto) {
     User user =
         userRepository
             .findById(id.value())
@@ -52,7 +52,7 @@ public class PostService {
   }
 
   @Transactional
-  public void update(Id<User, Long> userId, Id<Post, Long> postId, UpdateRequestDto dto) {
+  public void update(Id<User, Long> userId, Id<Post, Long> postId, UpdatePostDto dto) {
     Post post = findPost(userId, postId);
 
     Category category = null;

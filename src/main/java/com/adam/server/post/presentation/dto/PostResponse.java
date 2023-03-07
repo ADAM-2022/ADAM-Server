@@ -17,7 +17,7 @@ public class PostResponse {
 
   private String name;
 
-  private List<Comment> comments;
+  private List<CommentResponse> comments;
 
   private int viewCount;
 
@@ -37,7 +37,7 @@ public class PostResponse {
     this.body = body;
     this.name = name;
     this.category = category;
-    this.comments = comments;
+    this.comments = comments.stream().map(CommentResponse::fromEntity).toList();
     this.viewCount = viewCount;
     this.createdAt = createdAt;
   }
@@ -47,7 +47,7 @@ public class PostResponse {
         post.getId(),
         post.getTitle(),
         post.getBody(),
-        post.getUser().getName().getName(),
+        post.getUser().getName().getFullName(),
         post.getCategory().getName(),
         post.getComments(),
         post.getViewCount(),
@@ -94,11 +94,11 @@ public class PostResponse {
     this.name = name;
   }
 
-  public List<Comment> getComments() {
+  public List<CommentResponse> getComments() {
     return comments;
   }
 
-  public void setComments(List<Comment> comments) {
+  public void setComments(List<CommentResponse> comments) {
     this.comments = comments;
   }
 

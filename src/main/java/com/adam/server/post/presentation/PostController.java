@@ -3,9 +3,9 @@ package com.adam.server.post.presentation;
 import com.adam.server.common.model.Id;
 import com.adam.server.post.application.PostService;
 import com.adam.server.post.domain.Post;
-import com.adam.server.post.presentation.dto.CreateRequestDto;
+import com.adam.server.post.presentation.dto.CreatePostDto;
 import com.adam.server.post.presentation.dto.PostResponse;
-import com.adam.server.post.presentation.dto.UpdateRequestDto;
+import com.adam.server.post.presentation.dto.UpdatePostDto;
 import com.adam.server.security.jwt.JwtAuthentication;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +29,7 @@ public class PostController {
 
   @PostMapping("")
   public ResponseEntity<Void> create(
-      @AuthenticationPrincipal JwtAuthentication authentication,
-      @RequestBody CreateRequestDto dto) {
+      @AuthenticationPrincipal JwtAuthentication authentication, @RequestBody CreatePostDto dto) {
     postService.create(authentication.id(), dto);
     return ResponseEntity.ok(null);
   }
@@ -58,7 +57,7 @@ public class PostController {
   public ResponseEntity<Void> update(
       @AuthenticationPrincipal JwtAuthentication authentication,
       @PathVariable Long id,
-      @RequestBody UpdateRequestDto dto) {
+      @RequestBody UpdatePostDto dto) {
     postService.update(authentication.id(), Id.of(Post.class, id), dto);
     return ResponseEntity.ok(null);
   }
