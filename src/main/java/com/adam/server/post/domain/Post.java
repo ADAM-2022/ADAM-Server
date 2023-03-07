@@ -73,6 +73,10 @@ public class Post {
     return id;
   }
 
+  public void addComment(Comment comment) {
+    comments.add(comment);
+  }
+
   public String getTitle() {
     return title;
   }

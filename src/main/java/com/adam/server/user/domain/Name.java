@@ -38,7 +38,7 @@ public class Name {
     return nameMatcher.matches();
   }
 
-  public String getName() {
+  public String getFullName() {
     return name;
   }
 

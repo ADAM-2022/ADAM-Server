@@ -28,7 +28,7 @@ public class UserResponse {
     return new UserResponse(
         user.getId(),
         user.getEmail().getAddress(),
-        user.getName().getName(),
+        user.getName().getFullName(),
         user.getSessionTime(),
         user.getRole());
   }
