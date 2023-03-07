@@ -4,6 +4,8 @@ import com.adam.server.security.jwt.JwtAuthentication;
 import com.adam.server.user.application.UserService;
 import com.adam.server.user.presentation.dto.UpdateRequestDto;
 import com.adam.server.user.presentation.dto.UserResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,7 @@ public class UserController {
 
   private final UserService userService;
 
+  @Operation(security = {@SecurityRequirement(name = "authorization")})
   @GetMapping("/me")
   public ResponseEntity<UserResponse> me(
       @AuthenticationPrincipal JwtAuthentication authentication) {
@@ -28,12 +31,14 @@ public class UserController {
     return ResponseEntity.ok(userResponse);
   }
 
+  @Operation(security = {@SecurityRequirement(name = "authorization")})
   @GetMapping("")
   public ResponseEntity<List<UserResponse>> findAll() {
     List<UserResponse> userResponses = userService.findAll();
     return ResponseEntity.ok(userResponses);
   }
 
+  @Operation(security = {@SecurityRequirement(name = "authorization")})
   @PutMapping("")
   public ResponseEntity<Void> update(
       @AuthenticationPrincipal JwtAuthentication jwtAuthentication,
