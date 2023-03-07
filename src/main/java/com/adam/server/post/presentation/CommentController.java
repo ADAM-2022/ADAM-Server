@@ -8,6 +8,8 @@ import com.adam.server.post.presentation.dto.CommentResponse;
 import com.adam.server.post.presentation.dto.CommentUpdateDto;
 import com.adam.server.post.presentation.dto.CreateCommentDto;
 import com.adam.server.security.jwt.JwtAuthentication;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +30,7 @@ public class CommentController {
 
   private final CommentService commentService;
 
+  @Operation(security = {@SecurityRequirement(name = "authorization")})
   @PostMapping("")
   public void create(
       @AuthenticationPrincipal JwtAuthentication authentication,
@@ -36,12 +39,14 @@ public class CommentController {
     this.commentService.create(Id.of(Post.class, postId), authentication.id(), dto);
   }
 
+  @Operation(security = {@SecurityRequirement(name = "authorization")})
   @GetMapping("")
   public ResponseEntity<List<CommentResponse>> findAll(@PathVariable Long postId) {
     List<CommentResponse> commentResponses = this.commentService.findAll(Id.of(Post.class, postId));
     return ResponseEntity.ok(commentResponses);
   }
 
+  @Operation(security = {@SecurityRequirement(name = "authorization")})
   @GetMapping("/me")
   public ResponseEntity<List<CommentResponse>> me(
       @PathVariable Long postId, @AuthenticationPrincipal JwtAuthentication authentication) {
@@ -50,6 +55,7 @@ public class CommentController {
     return ResponseEntity.ok(commentResponses);
   }
 
+  @Operation(security = {@SecurityRequirement(name = "authorization")})
   @PutMapping("/{commentId}")
   public ResponseEntity<Void> update(
       @AuthenticationPrincipal JwtAuthentication authentication,
@@ -61,6 +67,7 @@ public class CommentController {
     return ResponseEntity.ok(null);
   }
 
+  @Operation(security = {@SecurityRequirement(name = "authorization")})
   @DeleteMapping("/{commentId}")
   public ResponseEntity<Void> delete(
       @AuthenticationPrincipal JwtAuthentication authentication,

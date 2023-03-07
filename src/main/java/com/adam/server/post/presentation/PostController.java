@@ -7,6 +7,8 @@ import com.adam.server.post.presentation.dto.CreatePostDto;
 import com.adam.server.post.presentation.dto.PostResponse;
 import com.adam.server.post.presentation.dto.UpdatePostDto;
 import com.adam.server.security.jwt.JwtAuthentication;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +29,7 @@ public class PostController {
 
   private final PostService postService;
 
+  @Operation(security = {@SecurityRequirement(name = "authorization")})
   @PostMapping("")
   public ResponseEntity<Void> create(
       @AuthenticationPrincipal JwtAuthentication authentication, @RequestBody CreatePostDto dto) {
@@ -34,18 +37,21 @@ public class PostController {
     return ResponseEntity.ok(null);
   }
 
+  @Operation(security = {@SecurityRequirement(name = "authorization")})
   @GetMapping("")
   public ResponseEntity<List<PostResponse>> findAll() {
     List<PostResponse> posts = postService.findAll();
     return ResponseEntity.ok(posts);
   }
 
+  @Operation(security = {@SecurityRequirement(name = "authorization")})
   @GetMapping("/{id}")
   public ResponseEntity<PostResponse> findById(@PathVariable Long id) {
     PostResponse post = postService.findById(Id.of(Post.class, id));
     return ResponseEntity.ok(post);
   }
 
+  @Operation(security = {@SecurityRequirement(name = "authorization")})
   @GetMapping("/me")
   public ResponseEntity<List<PostResponse>> me(
       @AuthenticationPrincipal JwtAuthentication authentication) {
@@ -53,6 +59,7 @@ public class PostController {
     return ResponseEntity.ok(posts);
   }
 
+  @Operation(security = {@SecurityRequirement(name = "authorization")})
   @PutMapping("/{id}")
   public ResponseEntity<Void> update(
       @AuthenticationPrincipal JwtAuthentication authentication,
@@ -62,6 +69,7 @@ public class PostController {
     return ResponseEntity.ok(null);
   }
 
+  @Operation(security = {@SecurityRequirement(name = "authorization")})
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> delete(
       @AuthenticationPrincipal JwtAuthentication authentication, @PathVariable Long id) {
